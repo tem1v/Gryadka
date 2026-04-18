@@ -1,5 +1,6 @@
 import {Label, ListBox, Select as BaseSelect} from "@heroui/react";
 import type {ISelectItem} from "@/types/select.types.ts";
+import {LucideMapPin} from "lucide-react";
 
 
 interface Props {
@@ -13,8 +14,9 @@ export function Select({items, placeholder, label, value}: Props) {
   return (
     <BaseSelect fullWidth placeholder={placeholder} value={value}>
       {label && <Label>{label}</Label>}
-      <BaseSelect.Trigger>
-        <BaseSelect.Value />
+      <BaseSelect.Trigger className='flex items-center gap-2'>
+        <LucideMapPin size={25} className='text-orange-400'/>
+        <BaseSelect.Value/>
         <BaseSelect.Indicator className="text-primary"/>
       </BaseSelect.Trigger>
       <BaseSelect.Popover>

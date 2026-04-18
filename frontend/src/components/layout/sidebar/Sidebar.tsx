@@ -1,11 +1,11 @@
 import { Card } from "@heroui/react";
-import {LucideEllipsis, PanelLeft} from "lucide-react";
+import {LogOut, LucideEllipsis, LucideSettings, PanelLeft} from "lucide-react";
 import icon from "/icon.svg";
 import {Menu} from "./Menu.tsx";
 import {cn} from "@heroui/styles";
 import {Select} from "@/components/ui/Select.tsx";
 import type {ISelectItem} from "@/types/select.types.ts";
-import {useState} from "react";
+import {Button, Dropdown, Label} from "@heroui/react";
 
 interface Props {
   name?: string;
@@ -39,13 +39,30 @@ export function Sidebar({name, location, isOpen, onToggle}: Props) {
             <PanelLeft className='text-primary hover:opacity-80 duration-300 cursor-pointer' size={30} strokeWidth={2}/>
           </button>
         </div>
-        <Select items={mockLocations} placeholder={"Выберите населенный пункт"} value={location}/>  {/*TODO from localstorage maybe*/}
+        <Select items={mockLocations} placeholder={"Выберите населенный пункт"} value={mockLocations[1].id}/>  {/*TODO from localstorage maybe*/}
         <Menu/>
         <div className='flex items-center justify-between w-full absolute left-0 bottom-0 px-4 py-6 border-t border-gray-200'>
           <span className='font-semibold text-xl'>{name}</span>
-          <button className='hover:opacity-50 transition-opacity duration-300'>
-            <LucideEllipsis strokeWidth={1} size={30} fill={'#000000'} />
-          </button>
+
+
+          {/*TODO separate maybe*/}
+          <Dropdown>
+            <Button isIconOnly className='hover:opacity-50 transition-opacity duration-300 bg-transparent text-black'>
+              <LucideEllipsis strokeWidth={2} size={50} fill={'#000000'} />
+            </Button>
+            <Dropdown.Popover>
+              <Dropdown.Menu onAction={(key) => console.log(`Selected: ${key}`)}>
+                <Dropdown.Item id="srttngs" textValue="Настройки">
+                  <LucideSettings size={20}/>
+                  <Label>Настройки</Label>
+                </Dropdown.Item>
+                <Dropdown.Item id="log-out" textValue="Выйти" className='text-red-600'>
+                  <LogOut size={20}/>
+                  <Label className='text-red-600'>Выйти</Label>
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown.Popover>
+          </Dropdown>
         </div>
       </Card>
     </aside>

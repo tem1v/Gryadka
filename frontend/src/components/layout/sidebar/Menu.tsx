@@ -8,7 +8,7 @@ export function Menu() {
     <ul className="">
       {menu.map((item:IMenuItem) => (
         <li className="p-2 rounded-2xl hover:bg-[#f0f0f0] duration-300 cursor-pointer">
-          <a className='flex items-center gap-2' style={{color: `${item.color}`}}>
+          <a className='flex items-center gap-2' style={{color: `${item.color}`}} href={item.link}>
             <item.icon size={30} strokeWidth={2}/>
             <span className='font-semibold text-xl'>{item.text}</span>
           </a>

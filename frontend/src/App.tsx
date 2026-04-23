@@ -1,10 +1,11 @@
 import './App.css'
+import {PlotsPage} from "@/pages/PlotsPage.tsx";
 
 function App() {
 
   return (
     <>
-        <h1>Участки</h1>
+        <PlotsPage/>
     </>
   )
 }

@@ -1,6 +1,6 @@
 import {Button} from "@/components/ui/Button.tsx";
 import {LucidePlus} from "lucide-react";
-import type {IPlotCard} from "@/types/plotCard.tyes.ts";
+import type {IPlotCard} from "@/types/plotCard.types.ts";
 import {PlotCard} from "@/components/features/Plot/PlotCard.tsx";
 
 
@@ -52,7 +52,7 @@ export function PlotsPage(props: Props) {
       </div>
       <div className='grid gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
         {mockPlots.map((plot) => (
-          <PlotCard key={plot.id} title={plot.title} createdAt={plot.createdAt} photo={plot.photo}/>
+          <PlotCard key={plot.id} id={plot.id} title={plot.title} createdAt={plot.createdAt} photo={plot.photo}/>
         ))}
       </div>
     </div>

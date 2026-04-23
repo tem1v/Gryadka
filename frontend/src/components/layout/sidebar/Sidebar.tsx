@@ -41,7 +41,7 @@ export function Sidebar({name, location, isOpen, onToggle}: Props) {
         </div>
         <Select items={mockLocations} placeholder={"Выберите населенный пункт"} value={mockLocations[1].id}/>  {/*TODO from localstorage maybe*/}
         <Menu/>
-        <div className='flex items-center justify-between w-full absolute left-0 bottom-0 px-4 py-6 border-t border-gray-200'>
+        <div className='flex items-center justify-between w-full absolute left-0 bottom-0 px-4 py-4.5 border-t border-gray-200'>
           <span className='font-semibold text-xl'>{name}</span>
 
 

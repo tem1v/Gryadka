@@ -43,7 +43,7 @@ const mockPlots:IPlotCard[] = [
 
 export function PlotsPage(props: Props) {
   return (
-    <div className='mx-auto w-fit my-25'>
+    <div className='mx-auto w-fit mt-25'>
       <div className='flex items-center justify-between mb-15'>
         <h1>Участки</h1>
         <Button>

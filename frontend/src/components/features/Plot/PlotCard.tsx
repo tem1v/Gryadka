@@ -1,5 +1,6 @@
 import {Card} from "@heroui/react";
 import {LucideSquarePen, LucideTrash2} from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface Props {
   id: string;
@@ -11,7 +12,7 @@ interface Props {
 export function PlotCard({id, title, createdAt, photo}: Props) {
   return (
     <Card className="p-0 w-fit relative transition duration-300 hover:scale-101">
-      <a href={`${id}`}>
+      <Link to={`${id}`}>
         <div className="max-w-120 max-h-60 overflow-hidden">
           <img src={photo || "/plot3.avif"} alt={title} className="w-full" />
         </div>
@@ -25,7 +26,7 @@ export function PlotCard({id, title, createdAt, photo}: Props) {
             <button className="text-red-600"><LucideTrash2/></button>
           </div>
         </div>
-      </a>
+      </Link>
     </Card>
   );
 };

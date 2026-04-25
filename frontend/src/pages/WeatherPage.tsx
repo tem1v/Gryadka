@@ -1,8 +1,8 @@
 import type {Weather} from "@/types/weather.types.ts";
 import {WeatherCard} from "@/components/features/Weather/WeatherCard.tsx";
 import {Card} from "@heroui/react";
-import {LucideCloud, LucideDroplets, LucideWind} from "lucide-react";
-import {getWeatherVariant, WEATHER_VARIANTS} from "@/constants/weatherVariants.ts";
+import {LucideDroplets, LucideWind} from "lucide-react";
+import {getWeatherVariant} from "@/constants/weatherVariants.ts";
 
 interface Props {
 
@@ -62,14 +62,14 @@ export function WeatherPage(props: Props) {
           <Card className='flex flex-col items-center h-full py-5 px-0'>
             <div className="flex flex-col">
               <span className="font-medium text-xl">{today.day}</span>
-              <span className="font-medium text-md text-[#797979]">{today.date}</span>
+              <span className="font-normal text-md opacity-50">{today.date}</span>
             </div>
             <div className="flex flex-row w-full justify-center items-center gap-16 border-b border-gray-200 py-3">
               <div className="flex flex-col items-center">
                 <weatherIcon.icon size={140} style={{color:weatherIcon.color}} strokeWidth={1}/>
                 <span className="font-normal text-xl opacity-50">{today.weather}</span>
               </div>
-              <span className="font-medium text-8xl">{today.temperature}°</span>
+              <span className="font-normal text-8xl">{today.temperature}°</span>
             </div>
             <div className='flex flex-row items-center w-full h-full justify-around py-1'>
               <div className="flex flex-row justify-between items-center gap-2.5">

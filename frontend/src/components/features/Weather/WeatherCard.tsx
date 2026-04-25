@@ -1,5 +1,5 @@
 import {Card} from "@heroui/react";
-import {LucideCloud, LucideDroplets, LucideWind, ThermometerSun} from "lucide-react";
+import {LucideDroplets, LucideWind, ThermometerSun} from "lucide-react";
 import {getWeatherVariant} from "@/constants/weatherVariants.ts";
 
 interface Props {

@@ -67,7 +67,7 @@ export function WeatherPage(props: Props) {
             <div className="flex flex-row w-full justify-center items-center gap-16 border-b border-gray-200 py-3">
               <div className="flex flex-col items-center">
                 <weatherIcon.icon size={140} style={{color:weatherIcon.color}} strokeWidth={1}/>
-                <span className="font-medium text-xl">{today.weather}</span>
+                <span className="font-normal text-xl opacity-50">{today.weather}</span>
               </div>
               <span className="font-medium text-8xl">{today.temperature}°</span>
             </div>
@@ -83,9 +83,9 @@ export function WeatherPage(props: Props) {
             </div>
           </Card>
           <div className='flex flex-col w-full gap-2.5'>
-            {restDays.map((plot) => (
+            {restDays.map((plot, index) => (
               <WeatherCard
-                key={plot.day}
+                key={index}
                 day={plot.day}
                 date={plot.date}
                 temperature={plot.temperature}

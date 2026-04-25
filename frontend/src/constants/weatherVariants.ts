@@ -1,7 +1,7 @@
 import {
   LucideCloud,
   LucideCloudLightning,
-  LucideCloudRain, type LucideIcon,
+  LucideCloudRain,
   LucideSnowflake,
   LucideSun
 } from "lucide-react";
@@ -14,7 +14,7 @@ export const WEATHER_VARIANTS: Record<string, WeatherVariant> = {
   },
   "Облачно":{
     icon: LucideCloud,
-    color:"#087cff",
+    color:"#439bff",
   },
   "Дождь":{
     icon: LucideCloudRain,

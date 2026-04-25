@@ -18,7 +18,7 @@ export function Layout({children}:PropsWithChildren) {
     >
       <PanelLeft className='text-primary hover:opacity-80 duration-300 cursor-pointer' size={30} strokeWidth={2}/>
     </button>
-    <main className='flex-1 p-2 overflow-y-auto'>
+    <main className='flex-1 p-2 overflow-y-auto '>
       {children}
     </main>
   </div>

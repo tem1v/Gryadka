@@ -29,7 +29,7 @@ const mockLocations:SelectItem[] = [
 export function Sidebar({name, location, isOpen, onToggle}: Props) {
   return (
     <aside className={cn(
-      "transition-all duration-500 overflow-hidden h-full p-2 relative",
+      "transition-all duration-500 overflow-hidden h-full p-2 pr-0 relative",
       isOpen ? " translate-x-0 opacity-100 w-80" : "-translate-x-full w-0 p-0"
     )}>
       <Card className={cn('flex gap-5 bg-white overflow-hidden w-full h-full px-4 py-7.5 relative transition-all duration-500', isOpen ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0' )}>

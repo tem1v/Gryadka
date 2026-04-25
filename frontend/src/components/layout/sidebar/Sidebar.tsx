@@ -6,6 +6,7 @@ import {cn} from "@heroui/styles";
 import {Select} from "@/components/ui/Select.tsx";
 import type {SelectItem} from "@/types/select.types.ts";
 import {Button, Dropdown, Label} from "@heroui/react";
+import {useState} from "react";
 
 interface Props {
   name?: string;
@@ -17,16 +18,17 @@ interface Props {
 const mockLocations:SelectItem[] = [
   {
     id: "moskow",
-    textValue: "Москва",
+    label: "Москва",
   },
   {
     id: "kazan",
-    textValue: "Казань",
+    label: "Казань",
   },
 ]
 
 
-export function Sidebar({name, location, isOpen, onToggle}: Props) {
+export function Sidebar({name,isOpen, onToggle}: Props) {
+  const [location, setLocation] = useState<SelectItem>(mockLocations[0]);
   return (
     <aside className={cn(
       "transition-all duration-500 overflow-hidden h-full p-2 pr-0 relative",
@@ -39,7 +41,13 @@ export function Sidebar({name, location, isOpen, onToggle}: Props) {
             <PanelLeft className='text-primary hover:opacity-80 duration-300 cursor-pointer' size={30} strokeWidth={2}/>
           </button>
         </div>
-        <Select items={mockLocations} placeholder={"Выберите населенный пункт"} value={mockLocations[1].id} label={"Локация"}/>  {/*TODO from localstorage maybe*/}
+        <Select
+          items={mockLocations}
+          placeholder={"Выберите населенный пункт"}
+          value={location.id}
+          label={"Локация"}
+          onToggleValue={setLocation}
+        />  {/*TODO from localstorage maybe*/}
         <Menu/>
         <div className='flex items-center justify-between w-full absolute left-0 bottom-0 px-4 py-4.5 border-t border-gray-200'>
           <span className='font-semibold text-xl'>{name}</span>

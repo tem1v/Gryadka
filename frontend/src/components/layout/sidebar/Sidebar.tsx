@@ -39,7 +39,7 @@ export function Sidebar({name, location, isOpen, onToggle}: Props) {
             <PanelLeft className='text-primary hover:opacity-80 duration-300 cursor-pointer' size={30} strokeWidth={2}/>
           </button>
         </div>
-        <Select items={mockLocations} placeholder={"Выберите населенный пункт"} value={mockLocations[1].id}/>  {/*TODO from localstorage maybe*/}
+        <Select items={mockLocations} placeholder={"Выберите населенный пункт"} value={mockLocations[1].id} label={"Локация"}/>  {/*TODO from localstorage maybe*/}
         <Menu/>
         <div className='flex items-center justify-between w-full absolute left-0 bottom-0 px-4 py-4.5 border-t border-gray-200'>
           <span className='font-semibold text-xl'>{name}</span>

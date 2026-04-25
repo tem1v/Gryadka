@@ -6,14 +6,15 @@ import {LucideMapPin} from "lucide-react";
 interface Props {
   items: SelectItem[];
   placeholder?: string;
-  label?: string;
+  label: string;
   value: string;
+  isLabelVisible?: boolean;
 }
 
-export function Select({items, placeholder, label, value}: Props) {
+export function Select({items, placeholder, label, value, isLabelVisible}: Props) {
   return (
-    <BaseSelect fullWidth placeholder={placeholder} value={value}>
-      {label && <Label>{label}</Label>}
+    <BaseSelect fullWidth placeholder={placeholder} value={value} aria-label={label}>
+      {isLabelVisible && <Label>{label}</Label>}
       <BaseSelect.Trigger className='flex items-center gap-2'>
         <LucideMapPin size={25} className='text-orange-400'/>
         <BaseSelect.Value/>

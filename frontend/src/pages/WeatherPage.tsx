@@ -1,4 +1,4 @@
-import type {IWeatherCard} from "@/types/weatherCard.types.ts";
+import type {Weather} from "@/types/weather.types.ts";
 import {WeatherCard} from "@/components/features/Weather/WeatherCard.tsx";
 import {Card} from "@heroui/react";
 import {LucideCloud, LucideDroplets, LucideWind} from "lucide-react";
@@ -8,7 +8,7 @@ interface Props {
 
 };
 
-const mockWeather:IWeatherCard[] = [
+const mockWeather:Weather[] = [
   {
     day: "Сегодня",
     date: "24.04.2026",

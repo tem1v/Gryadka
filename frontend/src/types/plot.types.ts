@@ -1,4 +1,4 @@
-export interface IPlotCard {
+export interface Plot {
   id: string;
   title: string;
   createdAt: string;

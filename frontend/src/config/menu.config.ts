@@ -1,4 +1,4 @@
-import type {IMenuItem} from "../types/menu.types.ts";
+import type {MenuItem} from "../types/menu.types.ts";
 import {ROUTES} from "./routes.config.ts";
 import {
   type LucideIcon,
@@ -17,7 +17,7 @@ export const getMenuItems = (weatherIcon: LucideIcon) => [
   },
 ]
 
-export const MENU : IMenuItem[] = [
+export const MENU : MenuItem[] = [
   {text:'Участки', link:ROUTES.PLOTS, icon:LucideSprout, color:'#2E7700'},
   {text:'Инвентарь', link:ROUTES.INVENTORY, icon:LucideToolCase, color:'#995F00'},
   {text:'Задачи', link:ROUTES.TASKS, icon:LucideListChecks, color:'#FF2020'},

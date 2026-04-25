@@ -4,7 +4,7 @@ import icon from "/icon.svg";
 import {Menu} from "./Menu.tsx";
 import {cn} from "@heroui/styles";
 import {Select} from "@/components/ui/Select.tsx";
-import type {ISelectItem} from "@/types/select.types.ts";
+import type {SelectItem} from "@/types/select.types.ts";
 import {Button, Dropdown, Label} from "@heroui/react";
 
 interface Props {
@@ -14,7 +14,7 @@ interface Props {
   onToggle?: () => void;
 };
 
-const mockLocations:ISelectItem[] = [
+const mockLocations:SelectItem[] = [
   {
     id: "moskow",
     textValue: "Москва",

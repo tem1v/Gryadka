@@ -1,6 +1,6 @@
 import {Button} from "@/components/ui/Button.tsx";
 import {LucidePlus} from "lucide-react";
-import type {IPlotCard} from "@/types/plotCard.types.ts";
+import type {Plot} from "@/types/plot.types.ts";
 import {PlotCard} from "@/components/features/Plot/PlotCard.tsx";
 
 
@@ -8,7 +8,7 @@ interface Props {
 
 };
 
-const mockPlots:IPlotCard[] = [
+const mockPlots:Plot[] = [
   {
     id:"1",
     title:"Огород за окном",

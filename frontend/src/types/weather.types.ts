@@ -1,4 +1,4 @@
-export interface IWeatherCard{
+export interface Weather {
   day: string;
   date: string;
   temperature: string;

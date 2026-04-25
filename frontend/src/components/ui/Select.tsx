@@ -1,10 +1,10 @@
 import {Label, ListBox, Select as BaseSelect} from "@heroui/react";
-import type {ISelectItem} from "@/types/select.types.ts";
+import type {SelectItem} from "@/types/select.types.ts";
 import {LucideMapPin} from "lucide-react";
 
 
 interface Props {
-  items: ISelectItem[];
+  items: SelectItem[];
   placeholder?: string;
   label?: string;
   value: string;

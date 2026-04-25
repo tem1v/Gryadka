@@ -28,7 +28,7 @@ const mockLocations:SelectItem[] = [
 
 
 export function Sidebar({name,isOpen, onToggle}: Props) {
-  const [location, setLocation] = useState<SelectItem>(mockLocations[0]);
+  const [location, setLocation] = useState<string>(mockLocations[0].id);
   return (
     <aside className={cn(
       "transition-all duration-500 overflow-hidden h-full p-2 pr-0 relative",
@@ -44,7 +44,7 @@ export function Sidebar({name,isOpen, onToggle}: Props) {
         <Select
           items={mockLocations}
           placeholder={"Выберите населенный пункт"}
-          value={location.id}
+          value={location}
           label={"Локация"}
           onToggleValue={setLocation}
         />  {/*TODO from localstorage maybe*/}

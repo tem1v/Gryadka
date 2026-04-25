@@ -21,9 +21,9 @@ export function PlotCard({id, title, createdAt, photo}: Props) {
             <h3>{title}</h3>
             <span>Создан: {createdAt}</span>
           </div>
-          <div className="flex gap-3.5">
-            <button><LucideSquarePen/></button>
-            <button className="text-red-600"><LucideTrash2/></button>
+          <div className="flex gap-3.5 cursor-pointer">
+            <button className="cursor-pointer transition-all duration-300 hover:opacity-60"><LucideSquarePen/></button>
+            <button className="text-red-600 transition-all cursor-pointer duration-300 hover:opacity-60"><LucideTrash2/></button>
           </div>
         </div>
       </Link>

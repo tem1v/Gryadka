@@ -5,8 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9096aadd-39d3-4e09-b608-63163b4ebc2a" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/features/Weather/WeatherCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/features/Weather/WeatherCard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/WeatherPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/WeatherPage.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/components/ui/NumberField.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/src/pages/InventoryPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,8 +18,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="TypeScript JSX File" />
         <option value="TypeScript File" />
+        <option value="TypeScript JSX File" />
       </list>
     </option>
   </component>
@@ -55,7 +57,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;dev&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/inventory-page&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Users/alyah/OneDrive/Desktop/Gryadka/ai&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
@@ -97,6 +99,7 @@
       <workItem from="1777038608805" duration="9903000" />
       <workItem from="1777107642478" duration="5295000" />
       <workItem from="1777130257362" duration="3742000" />
+      <workItem from="1777201067231" duration="1839000" />
     </task>
     <servers />
   </component>

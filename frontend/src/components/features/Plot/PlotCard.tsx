@@ -12,7 +12,7 @@ interface Props {
 export function PlotCard({id, title, createdAt, photo}: Props) {
   return (
     <Card className="p-0 w-fit relative transition duration-300 hover:scale-101">
-      <Link to={`${id}`}>
+      <Link to={`/plots/${id}`}>
         <div className="max-w-120 max-h-60 overflow-hidden">
           <img src={photo || "/plot3.avif"} alt={title} className="w-full" />
         </div>

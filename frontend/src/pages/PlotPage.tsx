@@ -8,6 +8,7 @@ import type {Task} from "@/types/task.types.ts";
 import {cn} from "@heroui/styles";
 import {TASK_VARIANTS} from "@/constants/taskVariants.ts";
 import {useState} from "react";
+import {ActionButtons} from "@/components/ui/ActionButtons.tsx";
 
 interface Props {
 
@@ -117,7 +118,7 @@ export function PlotPage(props: Props) {
     <div className='mx-auto w-full mt-25 max-w-[1480px]'>
       <div className='flex items-center justify-between mb-15'>
         <h1>{mockPlots.find(plot => plot.id === id)?.title}</h1>
-        <button className='text-primary' onClick={()=>navigate(-1)}>
+        <button className='text-primary cursor-pointer' onClick={()=>navigate(-1)}>
           <LucideArrowLeft className="m-0 p-0 hover:opacity-80 duration-300 transition-opacity" strokeWidth={2} size={40}/>
         </button>
       </div>
@@ -162,10 +163,7 @@ export function PlotPage(props: Props) {
                         />
                       </Table.Cell>
                       <Table.Cell>
-                        <div className="flex gap-3.5 cursor-pointer">
-                          <button className="cursor-pointer transition-all duration-300 hover:opacity-60"><LucideSquarePen/></button>
-                          <button className="text-red-600 transition-all cursor-pointer duration-300 hover:opacity-60"><LucideTrash2/></button>
-                        </div>
+                        <ActionButtons/> {/*TODO не забыть прописать функции*/}
                       </Table.Cell>
                     </Table.Row>
                   ))}

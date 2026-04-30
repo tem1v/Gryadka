@@ -3,6 +3,7 @@ import {LucidePlus, LucideSquarePen, LucideTrash2} from "lucide-react";
 import { Tabs, Table, Checkbox, type Selection } from '@heroui/react';
 import {useState} from "react";
 import {NumberField} from "@/components/ui/NumberField.tsx";
+import {ActionButtons} from "@/components/ui/ActionButtons.tsx";
 
 interface Props {
 
@@ -82,10 +83,7 @@ export function InventoryPage(props: Props) {
                         />
                       </Table.Cell>
                       <Table.Cell>
-                        <div className="flex gap-3.5 cursor-pointer">
-                          <button className="cursor-pointer transition-all duration-300 hover:opacity-60"><LucideSquarePen/></button>
-                          <button className="text-red-600 transition-all cursor-pointer duration-300 hover:opacity-60"><LucideTrash2/></button>
-                        </div>
+                        <ActionButtons/>
                       </Table.Cell>
                     </Table.Row>
                   ))}
@@ -132,10 +130,7 @@ export function InventoryPage(props: Props) {
                         />
                       </Table.Cell>
                       <Table.Cell>
-                        <div className="flex gap-3.5 cursor-pointer">
-                          <button className="cursor-pointer transition-all duration-300 hover:opacity-60"><LucideSquarePen/></button>
-                          <button className="text-red-600 transition-all cursor-pointer duration-300 hover:opacity-60"><LucideTrash2/></button>
-                        </div>
+                        <ActionButtons/>
                       </Table.Cell>
                     </Table.Row>
                   ))}
@@ -172,10 +167,7 @@ export function InventoryPage(props: Props) {
                         />
                       </Table.Cell>
                       <Table.Cell>
-                        <div className="flex gap-3.5 cursor-pointer">
-                          <button className="cursor-pointer transition-all duration-300 hover:opacity-60"><LucideSquarePen/></button>
-                          <button className="text-red-600 transition-all cursor-pointer duration-300 hover:opacity-60"><LucideTrash2/></button>
-                        </div>
+                        <ActionButtons/>
                       </Table.Cell>
                     </Table.Row>
                   ))}

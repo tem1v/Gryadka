@@ -5,6 +5,7 @@ import { Checkbox, Table, type Selection,Chip} from "@heroui/react";
 import {useState} from "react";
 import {cn} from "@heroui/styles";
 import {TASK_VARIANTS} from "@/constants/taskVariants.ts";
+import {ActionButtons} from "@/components/ui/ActionButtons.tsx";
 
 interface Props {
 
@@ -123,10 +124,7 @@ export function TasksPage(props: Props) {
                       </Table.Cell>
                       <Table.Cell className={cn('w-auto', task.isOverdue ? 'text-red-700' : '')}>{task.scheduledTime}</Table.Cell>
                       <Table.Cell className="w-auto">
-                        <div className="flex gap-3.5 cursor-pointer">
-                          <button className="cursor-pointer transition-all duration-300 hover:opacity-60"><LucideSquarePen/></button>
-                          <button className="text-red-600 transition-all cursor-pointer duration-300 hover:opacity-60"><LucideTrash2/></button>
-                        </div>
+                        <ActionButtons/>
                       </Table.Cell>
                     </Table.Row>
                   ))}

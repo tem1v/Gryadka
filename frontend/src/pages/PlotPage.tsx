@@ -6,9 +6,10 @@ import {Checkbox, Chip, type Selection, Table, Tabs} from "@heroui/react";
 import {NumberField} from "@/components/ui/NumberField.tsx";
 import type {Task} from "@/types/task.types.ts";
 import {cn} from "@heroui/styles";
-import {TASK_VARIANTS} from "@/constants/taskVariants.ts";
 import {useState} from "react";
 import {ActionButtons} from "@/components/ui/ActionButtons.tsx";
+import {PLANT_STATUSES} from "@/constants/plantStatuses.ts";
+import {TASK_VARIANTS} from "@/constants/taskVariants.ts";
 
 interface Props {
 
@@ -95,10 +96,10 @@ const mockPlots:Plot[] = [
 ]
 
 const seeds = [
-  {title: "Горох", variety:"Амброзия", id: 1, number: 10},
-  {title: "Перец", variety:"Чили", id: 2, number: 12},
-  {title: "Арбуз", variety:"Кримсон Свит", id: 3, number: 3},
-  {title: "Тыква", variety:"Крошка", id: 4, number: 5},
+  {title: "Горох", variety:"Амброзия", id: 1, number: 10, status:"В грунте"},
+  {title: "Перец", variety:"Чили", id: 2, number: 12, status:"Болеет"},
+  {title: "Арбуз", variety:"Кримсон Свит", id: 3, number: 3, status:"Убрано"},
+  {title: "Тыква", variety:"Крошка", id: 4, number: 5, status:"Плодоносит"},
 ];
 
 const groupTasksByDate = (tasks:Task[]) => {
@@ -148,18 +149,22 @@ export function PlotPage(props: Props) {
                 <Table.Header>
                   <Table.Column isRowHeader className="w-auto">Название</Table.Column>
                   <Table.Column isRowHeader className="w-full">Сорт</Table.Column>
+                  <Table.Column isRowHeader className="w-full text-center">Статус</Table.Column>
                   <Table.Column className="w-fit min-w-40 text-center">Количество</Table.Column>
                   <Table.Column className="w-auto"/>
                 </Table.Header>
                 <Table.Body>
-                  {seeds.map((tool) => (
-                    <Table.Row key={tool.id} id={tool.id}>
-                      <Table.Cell>{tool.title}</Table.Cell>
-                      <Table.Cell className='w-full'>{tool.variety}</Table.Cell>
+                  {seeds.map((plant) => (
+                    <Table.Row key={plant.id} id={plant.id}>
+                      <Table.Cell>{plant.title}</Table.Cell>
+                      <Table.Cell className='w-full'>{plant.variety}</Table.Cell>
+                      <Table.Cell className='w-auto'>
+                        <Chip className='text-white w-full flex justify-center items-center' style={{backgroundColor:PLANT_STATUSES[plant.status].color}}>{plant.status}</Chip>
+                      </Table.Cell>
                       <Table.Cell>
                         <NumberField
-                          value={tool.number}
-                          name={tool.title}
+                          value={plant.number}
+                          name={plant.title}
                         />
                       </Table.Cell>
                       <Table.Cell>

@@ -1,8 +1,7 @@
-import {Button} from "@/components/ui/Button.tsx";
-import {LucideArrowLeft, LucidePlus, LucideSquarePen, LucideTrash2} from "lucide-react";
-import {Link, useNavigate, useParams} from "react-router-dom";
+import {LucideArrowLeft} from "lucide-react";
+import {useNavigate, useParams} from "react-router-dom";
 import type {Plot} from "@/types/plot.types.ts";
-import {Checkbox, Chip, type Selection, Table, Tabs} from "@heroui/react";
+import {Chip, type Selection, Table, Tabs, Button} from "@heroui/react";
 import {NumberField} from "@/components/ui/NumberField.tsx";
 import type {Task} from "@/types/task.types.ts";
 import {cn} from "@heroui/styles";
@@ -155,7 +154,7 @@ export function PlotPage(props: Props) {
                 </Table.Header>
                 <Table.Body>
                   {seeds.map((plant) => (
-                    <Table.Row key={plant.id} id={plant.id}>
+                    <Table.Row key={plant.id} id={plant.id}  onClick={() => navigate(`plant/${plant.id}`)} className="cursor-pointer">
                       <Table.Cell>{plant.title}</Table.Cell>
                       <Table.Cell className='w-full'>{plant.variety}</Table.Cell>
                       <Table.Cell className='w-auto'>
@@ -201,44 +200,26 @@ export function PlotPage(props: Props) {
                     onSelectionChange={setSelectedKeys}
                   >
                     <Table.Header>
-                      <Table.Column className="">
-                        <Checkbox aria-label="Select all" slot="selection">
-                          <Checkbox.Control>
-                            <Checkbox.Indicator />
-                          </Checkbox.Control>
-                        </Checkbox>
-                      </Table.Column>
                       <Table.Column isRowHeader className="w-auto">Растение</Table.Column>
-                      <Table.Column className="w-full">Участок</Table.Column>
-                      <Table.Column className="w-full text-center">Тег</Table.Column>
-                      <Table.Column className="w-auto text-center">Время</Table.Column>
-                      <Table.Column className="w-auto"></Table.Column>
+                      <Table.Column className="w-auto">Участок</Table.Column>
+                      <Table.Column className="w-auto text-center">Тег</Table.Column>
+                      <Table.Column className="w-full"></Table.Column>
+                      <Table.Column className="w-full"></Table.Column>
                     </Table.Header>
                     <Table.Body>
                       {tasks.map((task) => (
-                        <Table.Row key={task.id} id={task.id} >
-                          <Table.Cell className="pr-0">
-                            <Checkbox
-                              aria-label={`Select ${task.plant}`}
-                              slot="selection"
-                              variant="secondary"
-                            >
-                              <Checkbox.Control>
-                                <Checkbox.Indicator />
-                              </Checkbox.Control>
-                            </Checkbox>
+                        <Table.Row key={task.id} id={task.id}>
+                          <Table.Cell
+                            className={cn('w-auto', task.isOverdue ? 'text-red-700' : '')}>{task.plant}</Table.Cell>
+                          <Table.Cell
+                            className={cn('w-auto', task.isOverdue ? 'text-red-700' : '')}>{task.plot}</Table.Cell>
+                          <Table.Cell className='w-auto'>
+                            <Chip className='text-white w-full flex justify-center items-center'
+                                  style={{backgroundColor: TASK_VARIANTS[task.actionTag].color}}>{task.actionTag}</Chip>
                           </Table.Cell>
-                          <Table.Cell className={cn('w-auto', task.isOverdue ? 'text-red-700' : '')}>{task.plant}</Table.Cell>
-                          <Table.Cell className={cn('w-full', task.isOverdue ? 'text-red-700' : '')}>{task.plot}</Table.Cell>
-                          <Table.Cell className='w-full'>
-                            <Chip className='text-white w-full flex justify-center items-center' style={{backgroundColor:TASK_VARIANTS[task.actionTag].color}}>{task.actionTag}</Chip>
-                          </Table.Cell>
-                          <Table.Cell className={cn('w-auto', task.isOverdue ? 'text-red-700' : '')}>{task.scheduledTime}</Table.Cell>
-                          <Table.Cell className="w-auto">
-                            <div className="flex gap-3.5 cursor-pointer">
-                              <button className="cursor-pointer transition-all duration-300 hover:opacity-60"><LucideSquarePen/></button>
-                              <button className="text-red-600 transition-all cursor-pointer duration-300 hover:opacity-60"><LucideTrash2/></button>
-                            </div>
+                          <Table.Cell className="w-full"/>
+                          <Table.Cell className="w-full">
+                            <ActionButtons/>
                           </Table.Cell>
                         </Table.Row>
                       ))}
@@ -250,6 +231,7 @@ export function PlotPage(props: Props) {
           )}
         </Tabs.Panel>
       </Tabs>
+      <Button className='mt-5 text-white bg-red-600 rounded-xl px-5 py-5.5 transition-all duration-300 hover:opacity-90'>Завершить сезон</Button>
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import {Card} from "@heroui/react";
 import {LucideSquarePen, LucideTrash2} from "lucide-react";
 import { Link } from "react-router-dom";
+import {ActionButtons} from "@/components/ui/ActionButtons.tsx";
 
 interface Props {
   id: string;
@@ -12,7 +13,7 @@ interface Props {
 export function PlotCard({id, title, createdAt, photo}: Props) {
   return (
     <Card className="p-0 w-fit relative transition duration-300 hover:scale-101">
-      <Link to={`${id}`}>
+      <Link to={`/plots/${id}`}>
         <div className="max-w-120 max-h-60 overflow-hidden">
           <img src={photo || "/plot3.avif"} alt={title} className="w-full" />
         </div>
@@ -21,10 +22,7 @@ export function PlotCard({id, title, createdAt, photo}: Props) {
             <h3>{title}</h3>
             <span>Создан: {createdAt}</span>
           </div>
-          <div className="flex gap-3.5 cursor-pointer">
-            <button className="cursor-pointer transition-all duration-300 hover:opacity-60"><LucideSquarePen/></button>
-            <button className="text-red-600 transition-all cursor-pointer duration-300 hover:opacity-60"><LucideTrash2/></button>
-          </div>
+          <ActionButtons/> {/*TODO не забыть прописать функции*/}
         </div>
       </Link>
     </Card>

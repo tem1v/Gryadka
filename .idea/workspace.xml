@@ -5,8 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9096aadd-39d3-4e09-b608-63163b4ebc2a" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/frontend/src/pages/PlantPage.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/PlotPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/PlotPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,8 +19,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="TypeScript JSX File" />
         <option value="TypeScript File" />
+        <option value="TypeScript JSX File" />
       </list>
     </option>
   </component>
@@ -55,7 +58,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;feature/plot-page&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/plant-page&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Users/alyah/OneDrive/Desktop/Gryadka/ai&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
@@ -103,6 +106,12 @@
       <workItem from="1777515643693" duration="3820000" />
       <workItem from="1777634295240" duration="784000" />
       <workItem from="1777804149491" duration="1803000" />
+      <workItem from="1778076349621" duration="6602000" />
+      <workItem from="1778450781953" duration="4133000" />
+      <workItem from="1778535898344" duration="2854000" />
+      <workItem from="1778661057434" duration="3113000" />
+      <workItem from="1778746248348" duration="1197000" />
+      <workItem from="1778935393018" duration="1358000" />
     </task>
     <servers />
   </component>

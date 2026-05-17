@@ -3,4 +3,5 @@ export interface Plot {
   title: string;
   createdAt: string;
   photo: string;
+  closedAt?: string;
 }

@@ -67,37 +67,47 @@ const tasks: Task[] = [
 const mockPlots:Plot[] = [
   {
     id:"1",
-    title:"Огород за окном",
+    userId:"1",
+    name:"Огород за окном",
     createdAt: "2026-06-01",
     photo:"",
+    location:'',
     closedAt:"2026-09-01",
   },
   {
     id:"2",
-    title:"Огород за сараем",
+    userId:"1",
+    name:"Огород за сараем",
     createdAt: "2026-06-03",
     photo:"",
+    location:'',
     closedAt:"2026-09-01"
   },
   {
     id:"3",
-    title:"Огород за сараем",
+    userId:"1",
+    name:"Огород за сараем",
     createdAt: "2026-06-03",
     photo:"",
+    location:'',
     closedAt:"2026-09-01"
   },
   {
     id:"4",
-    title:"Огород за сараем",
+    userId:"1",
+    name:"Огород за сараем",
     createdAt: "2026-06-03",
     photo:"",
+    location:'',
     closedAt:"2026-09-01"
   },
   {
     id:"5",
-    title:"Огород за сараем",
+    userId:"1",
+    name:"Огород за сараем",
     createdAt: "2026-06-03",
     photo:"",
+    location:'',
     closedAt:"2026-09-01"
   }
 ]
@@ -320,7 +330,7 @@ export function PlotPage(props: Props) {
   return (
     <div className='mx-auto w-full mt-25 max-w-[1480px]'>
       <div className='flex items-center justify-between mb-15'>
-        <h1>{mockPlots.find(plot => plot.id === id)?.title}</h1>
+        <h1>{mockPlots.find(plot => plot.id === id)?.name}</h1>
         <button className='text-primary cursor-pointer' onClick={()=>navigate(-1)}>
           <LucideArrowLeft className="m-0 p-0 hover:opacity-80 duration-300 transition-opacity" strokeWidth={2} size={40}/>
         </button>

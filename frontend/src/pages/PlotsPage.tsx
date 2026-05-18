@@ -11,33 +11,43 @@ interface Props {
 const mockPlots:Plot[] = [
   {
     id:"1",
-    title:"Огород за окном",
+    userId:"1",
+    name:"Огород за окном",
     createdAt: "2026-06-01",
-    photo:""
+    photo:"",
+    location:'',
   },
   {
     id:"2",
-    title:"Огород за сараем",
+    userId:"1",
+    name:"Огород за сараем",
     createdAt: "2026-06-03",
-    photo:""
+    photo:"",
+    location:'',
   },
   {
     id:"3",
-    title:"Огород за сараем",
+    userId:"1",
+    name:"Огород за сараем",
     createdAt: "2026-06-03",
-    photo:""
+    photo:"",
+    location:'',
   },
   {
     id:"4",
-    title:"Огород за сараем",
+    userId:"1",
+    name:"Огород за сараем",
     createdAt: "2026-06-03",
-    photo:""
+    photo:"",
+    location:'',
   },
   {
     id:"5",
-    title:"Огород за сараем",
+    userId:"1",
+    name:"Огород за сараем",
     createdAt: "2026-06-03",
-    photo:""
+    photo:"",
+    location:'',
   }
 ]
 
@@ -52,7 +62,7 @@ export function PlotsPage(props: Props) {
       </div>
       <div className='grid gap-5 grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
         {mockPlots.map((plot) => (
-          <PlotCard key={plot.id} id={plot.id} title={plot.title} createdAt={plot.createdAt} photo={plot.photo}/>
+          <PlotCard key={plot.id} id={plot.id} title={plot.name} createdAt={plot.createdAt} photo={plot.photo}/>
         ))}
       </div>
     </div>

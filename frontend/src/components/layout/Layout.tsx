@@ -3,6 +3,7 @@ import {Sidebar} from "./sidebar/Sidebar.tsx";
 import {PanelLeft} from "lucide-react";
 import {cn} from "@heroui/styles";
 import { Card } from "@heroui/react";
+import { Outlet } from "react-router-dom";
 
 export function Layout({children}:PropsWithChildren) {
   const [isOpen, setIsOpen] = useState(true);
@@ -21,7 +22,10 @@ export function Layout({children}:PropsWithChildren) {
       </button>
     </Card>
     <main className='flex-1 p-2 overflow-y-auto pb-25'>
-      {children}
+      <Outlet>
+        {children}
+      </Outlet>
+
     </main>
   </div>
 }

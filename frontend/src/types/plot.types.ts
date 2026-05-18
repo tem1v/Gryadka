@@ -1,7 +1,9 @@
 export interface Plot {
   id: string;
-  title: string;
+  userId: string;
+  name: string;
   createdAt: string;
   photo: string;
+  location: string;
   closedAt?: string;
 }

@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .database import engine, Base
-from .routers import auth, plots
+from .routers import auth, plots, plants
 from fastapi.staticfiles import StaticFiles
 import os
 
@@ -23,6 +23,7 @@ app.add_middleware(
 
 app.include_router(auth.router, prefix="/api")
 app.include_router(plots.router, prefix="/api")
+app.include_router(plants.router, prefix="/api")
 
 if not os.path.exists("images/plots"):
     os.makedirs("images/plots")

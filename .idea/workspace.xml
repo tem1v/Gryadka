@@ -5,15 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9096aadd-39d3-4e09-b608-63163b4ebc2a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/frontend/src/pages/AuthPage.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/app/routers/archives.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/app/routers/inventory.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/app/routers/tasks.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/layout/Layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/layout/Layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/ui/Button.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/ui/Button.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/main.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/PlotPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/PlotPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/PlotsPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/PlotsPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/types/plot.types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/types/plot.types.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/app/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/app/routers/plants.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app/routers/plants.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/app/schemas.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app/schemas.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,13 +24,14 @@
       <list>
         <option value="TypeScript File" />
         <option value="TypeScript JSX File" />
+        <option value="Python Script" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="feature/plant-page" />
+        <entry key="$PROJECT_DIR$" value="feature/backend-setup" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -62,7 +62,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;feature/auth-page&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/crud&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Users/alyah/OneDrive/Desktop/Gryadka/ai&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
@@ -86,7 +86,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-3aa1da707db6-JavaScript-WS-252.26830.93" />
+        <option value="bundled-js-predefined-d6986cc7102b-3aa1da707db6-JavaScript-PY-252.26830.99" />
+        <option value="bundled-python-sdk-164cda30dcd9-0af03a5fa574-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-252.26830.99" />
       </set>
     </attachedChunks>
   </component>
@@ -118,6 +119,7 @@
       <workItem from="1778746248348" duration="1197000" />
       <workItem from="1778935393018" duration="1358000" />
       <workItem from="1779012710100" duration="12999000" />
+      <workItem from="1779299234170" duration="12806000" />
     </task>
     <servers />
   </component>

@@ -12,19 +12,17 @@ from app.schemas import GardenPlotResponse
 router = APIRouter(prefix="/plots", tags=["Plots"])
 
 
-# СОЗДАНИЕ УЧАСТКА
 @router.post("/", response_model=GardenPlotResponse, status_code=status.HTTP_201_CREATED)
 async def create_plot(
         name: str = Form(...),
         type: PlotType = Form(...),
         location: str = Form("Казань"),
-        file: Optional[UploadFile] = File(None),  # Фото не обязательно
+        file: Optional[UploadFile] = File(None),
         db: Session = Depends(get_db),
         current_user: User = Depends(get_current_user)
 ):
     image_url = None
 
-    # Если фронтенд прикрепил файл, сохраняем его на диск
     if file:
         file_extension = file.filename.split(".")[-1]
         filename = f"{uuid.uuid4()}.{file_extension}"
@@ -35,7 +33,6 @@ async def create_plot(
 
         image_url = f"/images/plots/{filename}"
 
-    # Создаем запись в БД
     plot_id = str(uuid.uuid4())
     new_plot = GardenPlot(
         id=plot_id,
@@ -53,7 +50,6 @@ async def create_plot(
     return GardenPlotResponse.model_validate(new_plot)
 
 
-# ПОЛУЧИТЬ ВСЕ УЧАСТКИ ТЕКУЩЕГО ПОЛЬЗОВАТЕЛЯ
 @router.get("/", response_model=List[GardenPlotResponse])
 def get_all_my_plots(
         db: Session = Depends(get_db),
@@ -63,7 +59,6 @@ def get_all_my_plots(
     return plots
 
 
-# ПОЛУЧИТЬ УЧАСТОК ПО ID
 @router.get("/{plot_id}", response_model=GardenPlotResponse)
 def get_single_plot(
         plot_id: str,
@@ -78,7 +73,6 @@ def get_single_plot(
         )
     return plot
 
-# ОБНОВЛЕНИЕ УЧАСТКА
 @router.put("/{plot_id}", response_model=GardenPlotResponse)
 async def update_plot(
         plot_id: str,
@@ -127,7 +121,6 @@ async def update_plot(
     return GardenPlotResponse.model_validate(plot)
 
 
-# УДАЛИТЬ УЧАСТОК
 @router.delete("/{plot_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_plot(
         plot_id: str,

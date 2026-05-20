@@ -1,11 +1,10 @@
 import enum
-from sqlalchemy import Column, String, Integer, ForeignKey, Enum, DateTime, Float
+from sqlalchemy import Column, String, Integer, ForeignKey, Enum, DateTime, Float, Boolean, Date, Time, func
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from .database import Base
 
 
-# Перечисления для жесткой типизации на уровне БД
 class PlotType(str, enum.Enum):
     greenhouse = "greenhouse"
     open_ground = "open_ground"
@@ -18,6 +17,7 @@ class PlantStatus(str, enum.Enum):
     fruiting = "fruiting"
     sick = "sick"
     removed = "removed"
+    harvested = "harvested"
 
 
 class User(Base):
@@ -30,7 +30,7 @@ class User(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     plots = relationship("GardenPlot", back_populates="owner", cascade="all, delete-orphan")
-
+    inventory_items = relationship("InventoryItem", back_populates="user", cascade="all, delete-orphan")
 
 class GardenPlot(Base):
     __tablename__ = "garden_plots"
@@ -52,18 +52,19 @@ class Plant(Base):
 
     id = Column(String, primary_key=True, index=True)
     garden_plot_id = Column(String, ForeignKey("garden_plots.id", ondelete="CASCADE"), nullable=False)
-    name = Column(String, nullable=False)  # Культура (например, "Томат")
-    grade = Column(String, nullable=False)  # Сорт (например, "Черри")
+    name = Column(String, nullable=False)
+    grade = Column(String, nullable=False)
     quantity = Column(Integer, nullable=False, default=1)
     status = Column(Enum(PlantStatus), nullable=False, default=PlantStatus.planted)
+    season_archive_id = Column(String, ForeignKey("season_archives.id", ondelete="SET NULL"), nullable=True)
 
     total_yield_amount = Column(Float, nullable=True, default=0.0)
     yield_unit = Column(String, nullable=True, default="кг")
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     plot = relationship("GardenPlot", back_populates="plants")
-    # Связь с фотоальбомом
     photos = relationship("PlantPhoto", back_populates="plant", cascade="all, delete-orphan")
+    archive = relationship("SeasonArchive", back_populates="plants")
 
 
 class PlantPhoto(Base):
@@ -73,13 +74,12 @@ class PlantPhoto(Base):
     plant_id = Column(String, ForeignKey("plants.id", ondelete="CASCADE"), nullable=False)
     image_url = Column(String, nullable=False)
 
-    # Твои новые поля: подпись и статус фотографии
-    caption = Column(String, nullable=True)  # Описание от пользователя (например, "Первые всходы")
-    status = Column(String, nullable=True)  # Статус на фото (например, "Подозрение на болезнь", "Здоровое")
+    caption = Column(String, nullable=True)
+    status = Column(String, nullable=True)
 
     # Результаты ИИ-диагностики
-    disease_detected = Column(String, nullable=True)  # Техническое имя болезни из нейросети
-    confidence = Column(Float, nullable=True)  # Точность ИИ (0.0 - 1.0)
+    disease_detected = Column(String, nullable=True)
+    confidence = Column(Float, nullable=True)
 
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
@@ -90,8 +90,78 @@ class PlantDiseaseRecommendation(Base):
     __tablename__ = "plant_disease_recommendations"
 
     id = Column(String, primary_key=True, index=True)
-    crop_name = Column(String, nullable=False, index=True)  # Для какого растения модель (Томат, Огурец)
-    disease_code = Column(String, nullable=False, unique=True)  # Что возвращает ИИ (tomato_late_blight)
-    disease_name_ru = Column(String, nullable=False)  # Человеческое название (Фитофтороз томатов)
-    description = Column(String, nullable=False)  # Симптомы и описание болезни
+    crop_name = Column(String, nullable=False, index=True)
+    disease_code = Column(String, nullable=False, unique=True)
+    disease_name_ru = Column(String, nullable=False)
+    description = Column(String, nullable=False)
     treatment = Column(String, nullable=False)
+
+class ItemType(str, enum.Enum):
+    tool = "tool"
+    seeds = "seeds"
+    fertilizer = "fertilizer"
+
+class InventoryItem(Base):
+    __tablename__ = "inventory"
+
+    id = Column(String, primary_key=True, index=True)
+    user_id = Column(String, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+
+    name = Column(String, nullable=False)
+    item_type = Column(Enum(ItemType), nullable=False, default=ItemType.tool)
+    quantity = Column(Integer, nullable=False, default=1)
+    location = Column(String, nullable=True)
+
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    user = relationship("User", back_populates="inventory_items")
+
+
+class TaskTag(str, enum.Enum):
+    watering = "watering"
+    weeding = "weeding"
+    fertilizing = "fertilizing"
+    harvest = "harvest"
+    planting = "planting"
+    other = "other"
+
+
+class GardenTask(Base):
+    __tablename__ = "garden_tasks"
+
+    id = Column(String, primary_key=True, index=True)
+    user_id = Column(String, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    garden_plot_id = Column(String, ForeignKey("garden_plots.id", ondelete="CASCADE"), nullable=False)
+
+    plant_name = Column(String, nullable=True)
+    plant_grade = Column(String, nullable=True)
+    location = Column(String, nullable=True)
+    task_tag = Column(Enum(TaskTag), nullable=False, default=TaskTag.other)
+
+    task_date = Column(Date, nullable=False)
+    task_time = Column(Time, nullable=True)
+
+    send_email_notification = Column(Boolean, default=False)
+    is_completed = Column(Boolean, default=False)
+
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    user = relationship("User")
+    plot = relationship("GardenPlot")
+
+
+class SeasonArchive(Base):
+    __tablename__ = "season_archives"
+
+    id = Column(String, primary_key=True, index=True)
+    garden_plot_id = Column(String, ForeignKey("garden_plots.id", ondelete="CASCADE"), nullable=False)
+
+    name = Column(String, nullable=False)
+    start_date = Column(Date, nullable=False)
+    end_date = Column(Date, nullable=False)
+
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    plot = relationship("GardenPlot")
+    plants = relationship("Plant", back_populates="archive")
+

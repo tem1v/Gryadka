@@ -74,8 +74,8 @@ def register_with_onboarding(payload: OnboardingPayload, db: Session = Depends(g
     return {
         "access_token": access_token,
         "token_type": "bearer",
-        "user": UserResponse.from_attributes(new_user),
-        "first_plot": GardenPlotResponse.from_attributes(first_plot)
+        "user": UserResponse.model_validate(new_user),
+        "first_plot": GardenPlotResponse.model_validate(first_plot)
     }
 
 
@@ -97,8 +97,8 @@ def login(payload: UserLogin, db: Session = Depends(get_db)):
     return {
         "access_token": access_token,
         "token_type": "bearer",
-        "user": UserResponse.from_attributes(user),
-        "plots": [GardenPlotResponse.from_attributes(plot) for plot in user_plots]
+        "user": UserResponse.model_validate(user),
+        "plots": [GardenPlotResponse.model_validate(plot) for plot in user_plots]
     }
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")

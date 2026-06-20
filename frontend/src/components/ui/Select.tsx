@@ -28,7 +28,7 @@ export function Select({items, placeholder, label, value, isLabelVisible, onTogg
       <BaseSelect.Popover>
         <ListBox>
           {items.map((item) => (
-            <ListBox.Item id={item.id} textValue={item.label}>
+            <ListBox.Item id={item.id} textValue={item.label} key={item.id}>
               {item.label}
               <ListBox.ItemIndicator className="text-primary text-lg"/>
             </ListBox.Item>

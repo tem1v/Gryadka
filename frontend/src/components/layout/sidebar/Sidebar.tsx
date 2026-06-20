@@ -6,7 +6,10 @@ import {cn} from "@heroui/styles";
 import {Select} from "@/components/ui/Select.tsx";
 import type {SelectItem} from "@/types/select.types.ts";
 import {Button, Dropdown, Label} from "@heroui/react";
-import {useState} from "react";
+import {type Key, useEffect, useMemo, useState} from "react";
+import {useAuthStore} from "@/store/auth.store.ts";
+import {useNavigate} from "react-router-dom";
+import {usePlotsStore} from "@/store/plots.store.ts";
 
 interface Props {
   name?: string;
@@ -15,20 +18,44 @@ interface Props {
   onToggle?: () => void;
 };
 
-const mockLocations:SelectItem[] = [
-  {
-    id: "moskow",
-    label: "Москва",
-  },
-  {
-    id: "kazan",
-    label: "Казань",
-  },
-]
-
 
 export function Sidebar({name,isOpen, onToggle}: Props) {
-  const [location, setLocation] = useState<string>(mockLocations[0].id);
+  const plots = usePlotsStore((state) => state.plots) ?? []
+  const getPlots = usePlotsStore(
+    (state) => state.getPlots
+  )
+  useEffect(() => {
+
+    getPlots()
+
+  }, [])
+  const locations = useMemo(() => {
+    return [...new Set(plots.map(p => p.location))]
+  }, [plots])
+  const selectedLocation = useAuthStore((state) => state.selectedLocation)
+  const setSelectedLocation = useAuthStore(
+    (state) => state.setSelectedLocation
+  )
+  const logout = useAuthStore((state) => state.logout)
+  const handleLogout = useLogout()
+  useEffect(() => {
+
+    if (!locations.length) return
+
+    if (
+      selectedLocation &&
+      locations.includes(selectedLocation)
+    ) {
+      return
+    }
+
+    setSelectedLocation(locations[0])
+
+  }, [
+    locations,
+    selectedLocation,
+    setSelectedLocation
+  ])
   return (
     <aside className={cn(
       "transition-all duration-500 overflow-hidden h-full p-2 pr-0 relative",
@@ -42,29 +69,25 @@ export function Sidebar({name,isOpen, onToggle}: Props) {
           </button>
         </div>
         <Select
-          items={mockLocations}
-          placeholder={"Выберите населенный пункт"}
-          value={location}
-          label={"Локация"}
-          onToggleValue={setLocation}
-        />  {/*TODO from localstorage maybe*/}
+          items={locations.map((l) => ({ id: l, label: l }))}
+          placeholder="Выберите населенный пункт"
+          value={locations.includes(selectedLocation ?? "")
+            ? selectedLocation
+            : ""}
+          label="Локация"
+          onToggleValue={setSelectedLocation}
+        />
         <Menu/>
         <div className='flex items-center justify-between w-full absolute left-0 bottom-0 px-4 py-4.5 border-t border-gray-200'>
           <span className='font-semibold text-xl'>{name}</span>
 
-
-          {/*TODO separate maybe*/}
           <Dropdown>
             <Button isIconOnly className='hover:opacity-50 transition-opacity duration-300 bg-transparent text-black'>
               <LucideEllipsis strokeWidth={2} size={50} fill={'#000000'} />
             </Button>
             <Dropdown.Popover>
-              <Dropdown.Menu onAction={(key) => console.log(`Selected: ${key}`)}>
-                <Dropdown.Item id="srttngs" textValue="Настройки">
-                  <LucideSettings size={20}/>
-                  <Label>Настройки</Label>
-                </Dropdown.Item>
-                <Dropdown.Item id="log-out" textValue="Выйти" className='text-red-600'>
+              <Dropdown.Menu>
+                <Dropdown.Item id="log-out" textValue="Выйти" className='text-red-600' onClick={handleLogout}>
                   <LogOut size={20}/>
                   <Label className='text-red-600'>Выйти</Label>
                 </Dropdown.Item>
@@ -76,3 +99,15 @@ export function Sidebar({name,isOpen, onToggle}: Props) {
     </aside>
   )
 }
+
+export const useLogout = () => {
+  const navigate = useNavigate();
+  const logout = useAuthStore((state) => state.logout);
+
+  const handleLogout = () => {
+    logout();
+    navigate('/sign-in', { replace: true });
+  };
+
+  return handleLogout;
+};

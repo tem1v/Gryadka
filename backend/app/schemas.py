@@ -86,7 +86,7 @@ class PlantCreate(BaseModel):
     name: str
     grade: str
     quantity: int = 1
-    status_plant: Optional[PlantStatus] = PlantStatus.planted
+    status_plant: PlantStatus
 
 class PlantUpdate(BaseModel):
     name: Optional[str] = None
@@ -100,7 +100,7 @@ class InventoryItemCreate(BaseModel):
     name: str
     item_type: ItemType
     quantity: int = 1
-    location: Optional[str] = None
+    location: str
 
 class InventoryItemUpdate(BaseModel):
     name: Optional[str] = None
@@ -189,3 +189,40 @@ class SeasonArchiveResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class PredictionResult(BaseModel):
+    filename: str
+    plant: str
+    label: str
+    confidence: float
+
+class OverallResult(BaseModel):
+    label: str
+    confidence: float
+
+class AIResponse(BaseModel):
+    data: dict
+
+class HarvestBase(BaseModel):
+    weight: float
+    harvest_date: date
+
+class HarvestCreate(HarvestBase):
+    plant_id: str
+
+class HarvestUpdate(BaseModel):
+    weight: Optional[float] = None
+    harvest_date: Optional[date] = None
+
+class HarvestResponse(HarvestBase):
+    id: str
+    plant_id: str
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+class SeasonYieldStat(BaseModel):
+    name: str
+    kg: float

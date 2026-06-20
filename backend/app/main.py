@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .database import engine, Base
-from .routers import auth, plots, plants, inventory, tasks, archives
+from .database import engine, Base, SessionLocal, seed_disease_recommendations
+from .routers import auth, plots, plants, inventory, tasks, archives, ai, harvest
 from fastapi.staticfiles import StaticFiles
 import os
 
@@ -27,11 +27,22 @@ app.include_router(plants.router, prefix="/api")
 app.include_router(inventory.router, prefix="/api")
 app.include_router(tasks.router, prefix="/api")
 app.include_router(archives.router, prefix="/api")
+app.include_router(harvest.router, prefix="/api")
+
+app.include_router(ai.router, prefix="/api")
 
 if not os.path.exists("images/plots"):
     os.makedirs("images/plots")
 
 app.mount("/images", StaticFiles(directory="images"), name="images")
+
+@app.on_event("startup")
+def startup():
+    db = SessionLocal()
+    try:
+        seed_disease_recommendations(db)
+    finally:
+        db.close()
 @app.get("/")
 def root():
     return {"status": "ok", "message": "Garden Manager API работает стабильно"}

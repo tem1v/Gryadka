@@ -133,7 +133,6 @@ def delete_plant(
 
 @router.get("/ai-supported-crops", response_model=List[SupportedCropResponse])
 def get_ai_supported_crops(db: Session = Depends(get_db)):
-    # Выбираем уникальные имена культур из нашей базы знаний рекомендаций
     crops = db.query(PlantDiseaseRecommendation.crop_name).distinct().all()
     return [{"crop_name": c[0]} for c in crops]
 
@@ -153,14 +152,14 @@ async def add_photo_to_album(
 
     file_extension = file.filename.split(".")[-1]
     filename = f"{uuid.uuid4()}.{file_extension}"
-    file_path = f"images/plots/{filename}"
+    file_path = f"images/plants/{filename}"
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
     new_photo = PlantPhoto(
         id=str(uuid.uuid4()),
         plant_id=plant_id,
-        image_url=f"/images/plots/{filename}",
+        image_url=f"/images/plants/{filename}",
         caption=caption,
         status=status_photo
     )
@@ -208,3 +207,52 @@ def analyze_photo(
         return response_data
 
     raise HTTPException(status_code=500, detail="Ошибка ИИ: Не найдены рекомендации для распознанной болезни.")
+
+@router.get("/{plant_id}/photos", response_model=List[PlantPhotoResponse])
+def get_plant_photos(
+        plant_id: str,
+        db: Session = Depends(get_db),
+        current_user: User = Depends(get_current_user)
+):
+    plant = db.query(Plant).join(GardenPlot).filter(
+        Plant.id == plant_id,
+        GardenPlot.user_id == current_user.id
+    ).first()
+
+    if not plant:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Растение не найдено")
+
+    photos = db.query(PlantPhoto).filter(
+        PlantPhoto.plant_id == plant_id
+    ).order_by(PlantPhoto.created_at.desc()).all()
+
+    return photos
+
+
+@router.delete("/photos/{photo_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_plant_photo(
+        photo_id: str,
+        db: Session = Depends(get_db),
+        current_user: User = Depends(get_current_user)
+):
+
+    photo = db.query(PlantPhoto).join(Plant).join(GardenPlot).filter(
+        PlantPhoto.id == photo_id,
+        GardenPlot.user_id == current_user.id
+    ).first()
+
+    if not photo:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Фотография не найдена")
+
+    file_path = photo.image_url.lstrip("/")
+
+    if os.path.exists(file_path):
+        try:
+            os.remove(file_path)
+        except Exception as e:
+            print(f"Не удалось удалить файл {file_path} с диска: {e}")
+
+    db.delete(photo)
+    db.commit()
+
+    return None

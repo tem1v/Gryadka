@@ -1,22 +1,33 @@
-import type {TaskVariant} from "@/types/taskVariant.types.ts";
+export const TASK_VARIANTS = {
 
-export const TASK_VARIANTS:Record<string, TaskVariant> = {
-  "Посадка":{
-    color:"#13E300",
+  planting: {
+    label: "Посадка",
+    color: "#13E300",
   },
-  "Полив":{
-    color:"#006FEE",
+
+  watering: {
+    label: "Полив",
+    color: "#006FEE",
   },
-  "Удобрение":{
-    color:"#F5A524",
+
+  fertilizing: {
+    label: "Удобрение",
+    color: "#F5A524",
   },
-  "Обработка":{
-    color:"#7828C8",
+
+  weeding: {
+    label: "Прополка",
+    color: "#7828C8",
   },
-  "Уборка":{
-    color:"#EE0000",
+
+  harvest: {
+    label: "Сбор",
+    color: "#9A5C05",
   },
-  "Сбор":{
-    color:"#9A5C05",
-  }
+
+  cleaning: {
+    label: "Уборка",
+    color: "#EE0000",
+  },
+
 }

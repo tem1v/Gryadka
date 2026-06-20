@@ -6,15 +6,17 @@ interface Props {
   className?: string;
   type?: "button" | "submit" | "reset";
   onClick?: () => void;
+  slot?: string;
 };
 
-export function Button({children, className, type, onClick}: Props) {
+export function Button({children, className, type, onClick, slot}: Props) {
   return (
     <BaseButton
       className={cn(`text-white bg-primary rounded-xl px-5 py-5.5 transition-all duration-300 hover:opacity-90 hover:scale-102`, className)}
       onPress={() => console.log("Button pressed")}
       type={type}
       onClick={onClick}
+      slot={slot}
     >
       {children}
     </BaseButton>

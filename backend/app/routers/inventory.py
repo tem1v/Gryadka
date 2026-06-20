@@ -20,7 +20,8 @@ def create_inventory_item(
         user_id=current_user.id,
         name=item_data.name,
         item_type=item_data.item_type,
-        quantity=item_data.quantity
+        quantity=item_data.quantity,
+        location=item_data.location,
     )
     db.add(new_item)
     db.commit()
@@ -40,7 +41,7 @@ def get_inventory(
 @router.put("/{item_id}", response_model=InventoryItemResponse)
 def update_inventory_item(
     item_id: str,
-    item_data: InventoryItemUpdate, # Тоже читаем из JSON
+    item_data: InventoryItemUpdate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):

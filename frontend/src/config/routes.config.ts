@@ -3,4 +3,5 @@ export const ROUTES = {
   WEATHER: '/weather',
   TASKS: '/tasks',
   INVENTORY: '/inventory',
+  AI:'/ai'
 } as const;

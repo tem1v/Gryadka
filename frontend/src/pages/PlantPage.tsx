@@ -1,179 +1,159 @@
 import {useNavigate, useParams} from "react-router-dom";
-import {LucideArrowLeft, LucidePlus} from "lucide-react";
-import {Card, Chip, type Selection, Table, Tabs} from "@heroui/react";
-import {PLANT_STATUSES} from "@/constants/plantStatuses.ts";
-import {NumberField} from "@/components/ui/NumberField.tsx";
-import {ActionButtons} from "@/components/ui/ActionButtons.tsx";
+import {LucideArrowLeft, LucidePlus, LucideTrash2} from "lucide-react";
+import {
+  AlertDialog,
+  Card,
+  Chip,
+  Form,
+  Input,
+  Label,
+  type Selection,
+  Table,
+  Tabs, TextField
+} from "@heroui/react";
 import {cn} from "@heroui/styles";
 import {TASK_VARIANTS} from "@/constants/taskVariants.ts";
 import type {Task} from "@/types/task.types.ts";
-import {useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import {Button} from "@/components/ui/Button.tsx";
+import {useTasksStore} from "@/store/tasks.store.ts";
+import {formatDate} from "@/utils/formatDate.ts";
+import {useAuthStore} from "@/store/auth.store.ts";
+import {usePlantsStore} from "@/store/plants.store.ts";
+import {useArchivesStore} from "@/store/archives.store.ts";
+import {useHarvestsStore} from "@/store/harvest.store.ts";
+import type {PlantPhoto} from "@/types/plant.types.ts";
+import {usePlantPhotosStore} from "@/store/photo.store.ts";
 
 interface Props {
 
 };
 
-const data = [
-  {
-    name: '2021',
-    pv: 2400,
-  },
-  {
-    name: '2022',
-    pv: 1398,
-  },
-  {
-    name: '2023',
-    pv: 9800,
-  },
-  {
-    name: '2024',
-    pv: 3908,
-  },
-  {
-    name: '2025',
-    pv: 4800,
-  },
-  {
-    name: '2026',
-    pv: 3800,
-  },
-];
-
-const tasks: Task[] = [
-  {
-    id: "1",
-    scheduledDate: "Сегодня",
-    plant: "Огурцы",
-    plot: "Огород",
-    actionTag: "Полив",
-    description: "Что-то сделать",
-    scheduledTime: "12:00",
-    isCompleted: false,
-    isOverdue: true,
-  },
-  {
-    id: "2",
-    scheduledDate: "Сегодня",
-    plant: "Помидоры",
-    plot: "Огород за сараем",
-    actionTag: "Сбор",
-    description: "Собрать и помыть",
-    scheduledTime: "13:00",
-    isCompleted: false,
-    isOverdue: false,
-  },
-  {
-    id: "3",
-    scheduledDate: "Вчера",
-    plant: "Огурец",
-    plot: "Огород",
-    actionTag: "Полив",
-    description: "Что-то сделать",
-    scheduledTime: "12:00",
-    isCompleted: false,
-    isOverdue: false,
-  },
-  {
-    id: "4",
-    scheduledDate: "16-05-2026",
-    plant: "Огурец",
-    plot: "Огород",
-    actionTag: "Полив",
-    description: "Что-то сделать",
-    scheduledTime: "12:00",
-    isCompleted: false,
-    isOverdue: false,
-  }
-];
-
-const seeds = [
-  {title: "Горох", variety:"Амброзия", id: 1, number: 10, status:"В грунте"},
-  {title: "Перец", variety:"Чили", id: 2, number: 12, status:"Болеет"},
-  {title: "Арбуз", variety:"Кримсон Свит", id: 3, number: 3, status:"Убрано"},
-  {title: "Тыква", variety:"Крошка", id: 4, number: 5, status:"Плодоносит"},
-];
-
-const harvest = [
-  {
-    id:1,
-    date: "12-07-2026",
-    weight: 0.5
-  },
-  {
-    id:2,
-    date: "12-07-2026",
-    weight: 0.5
-  },
-  {
-    id:3,
-    date: "12-07-2026",
-    weight: 0.5
-  },
-  {
-    id:4,
-    date: "12-07-2026",
-    weight: 0.5
-  }
-]
-
-const album = [
-  {
-    id: 1,
-    photo:"../../../public/plot2.jpg",
-    description: "Растут мои помидорки",
-    tag: "hz",
-    date:'',
-  },
-  {
-    id: 2,
-    photo:"../../../public/plot2.jpg",
-    description: "Растут мои помидорки",
-    tag: "hz",
-    date:'',
-  },
-  {
-    id: 3,
-    photo:"../../../public/plot2.jpg",
-    description: "Растут мои помидорки",
-    tag: "hz",
-    date:'',
-  },
-  {
-    id: 4,
-    photo:"../../../public/plot2.jpg",
-    description: "Растут мои помидорки",
-    tag: "hz",
-    date:'',
-  },
-  {
-    id: 5,
-    photo:"../../../public/plot2.jpg",
-    description: "Растут мои помидорки",
-    tag: "hz",
-    date:'',
-  }
-]
-
-const groupTasksByDate = (tasks:Task[]) => {
-  return tasks.reduce((acc, task) => {
-    const date = task.scheduledDate;
-    if (!acc[date]) acc[date] = [];
-    acc[date].push(task);
-    return acc;
-  }, {} as Record<string, Task[]>);
-};
-
 export function PlantPage(props: Props) {
-  const { id } = useParams<{ id: string}>();
+  const { plotId, plantId } = useParams<{ plotId:string, plantId: string}>();
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set());
+  const [harvestValue, setHarvestValue] = useState('');
+  const [harvestDate, setHarvestDate] = useState('');
   const navigate = useNavigate();
+  const [openedPhoto, setOpenedPhoto] = useState<PlantPhoto | null>(null);
+  const selectedLocation = useAuthStore((state) => state.selectedLocation)
+  const plants = usePlantsStore(
+    (state) => state.plants
+  )
+  const currentPlant = plants.find(
+    (p) => p.id === plantId
+  )
+  const tasks = useTasksStore((state) => state.tasks)
+    .filter((task) =>
+      task.is_completed &&
+      task.location === selectedLocation &&
+      task.garden_plot_id === plotId &&
+      task.plant_name === currentPlant?.name &&
+      task.plant_grade === currentPlant?.grade
+    )
+    .sort((a, b) => {
+
+      const dateA = new Date(
+        `${a.task_date}T${a.task_time}`
+      ).getTime()
+
+      const dateB = new Date(
+        `${b.task_date}T${b.task_time}`
+      ).getTime()
+
+      return dateB - dateA
+    })
+  const getPlantsByPlotId = usePlantsStore((state)=>state.getPlantsByPlot)
+
+  const getTasks = useTasksStore(
+    (state) => state.getTasks
+  )
+
+  const chartData = useArchivesStore(
+    (state) => state.chartData
+  )
+
+  const getArchiveChartData =
+    useArchivesStore(
+      (state) => state.getArchiveChartData
+    )
+  const harvests = useHarvestsStore(
+    (state) => state.harvests
+  ).sort((a,b) => {
+    const dateA = new Date(a.harvest_date).getTime()
+    const dateB = new Date(b.harvest_date).getTime()
+    return dateB - dateA
+  })
+
+  const getHarvestsByPlant =
+    useHarvestsStore(
+      (state) => state.getHarvestsByPlant
+    )
+
+  const createHarvest =
+    useHarvestsStore(
+      (state) => state.createHarvest
+    )
+
+  const deleteHarvest =
+    useHarvestsStore(
+      (state) => state.deleteHarvest
+    )
+  const clearForm = () => {
+    setHarvestValue('')
+    setHarvestDate('')
+  }
+
+  const handleCreateHarvest = async () => {
+    await createHarvest({
+      weight:+harvestValue,
+      harvest_date:harvestDate,
+      plant_id:plantId!
+    })
+    clearForm()
+  }
+
+  useEffect(() => {
+    getTasks()
+    getPlantsByPlotId(plotId!)
+    getHarvestsByPlant(plantId!)
+
+  }, [plotId])
+  useEffect(() => {
+    getArchiveChartData(plantId!)
+  }, [harvests]);
+
+  const fileInputRef = useRef<HTMLInputElement | null>(null)
+
+  const handleOpenFilePicker = () => {
+    fileInputRef.current?.click()
+  }
+  const createPlantPhoto = usePlantPhotosStore((state) => state.createPlantPhoto)
+  const deletePlantPhoto =
+    usePlantPhotosStore(
+      (state) =>
+        state.deletePlantPhoto
+    )
+
+  const handleSelectImage = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+
+    const file = e.target.files?.[0]
+
+    if (!file) return
+
+    await createPlantPhoto(
+      plantId!,
+      file
+    )
+    await getPlantsByPlotId(plotId!)
+  }
   return (
     <div className='mx-auto w-full mt-25 max-w-[1480px]'>
       <div className='flex items-center justify-between mb-15'>
-        <h1>{seeds.find(plant => plant.id === +id)?.title}</h1>
+        <h1>{currentPlant?.name} {currentPlant?.grade}</h1>
         <button className='text-primary cursor-pointer' onClick={()=>navigate(-1)}>
           <LucideArrowLeft className="m-0 p-0 hover:opacity-80 duration-300 transition-opacity" strokeWidth={2} size={40}/>
         </button>
@@ -196,14 +176,6 @@ export function PlantPage(props: Props) {
           </Tabs.List>
         </Tabs.ListContainer>
         <Tabs.Panel className="pt-4 w-full p-0 relative" id="history">
-          <div className='absolute right-0 -top-12.5'>
-            <Button>
-              <LucidePlus className="w-5 h-5 m-0 p-0" strokeWidth={2}/>
-            </Button>
-          </div>
-          {Object.entries(groupTasksByDate(tasks)).map(([date, tasks]) =>
-            <div className='flex flex-col gap-4 mb-4'>
-              <h2>{date}</h2>
               <Table>
                 <Table.ScrollContainer>
                   <Table.Content
@@ -214,59 +186,98 @@ export function PlantPage(props: Props) {
                     onSelectionChange={setSelectedKeys}
                   >
                     <Table.Header>
-                      <Table.Column isRowHeader className="w-auto">Растение</Table.Column>
-                      <Table.Column className="w-auto">Участок</Table.Column>
+                      <Table.Column isRowHeader className="min-w-40">Дата</Table.Column>
                       <Table.Column className="w-auto text-center">Тег</Table.Column>
-                      <Table.Column className="w-full"></Table.Column>
                       <Table.Column className="w-full"></Table.Column>
                     </Table.Header>
                     <Table.Body>
                       {tasks.map((task) => (
                         <Table.Row key={task.id} id={task.id}>
                           <Table.Cell
-                            className={cn('w-auto', task.isOverdue ? 'text-red-700' : '')}>{task.plant}</Table.Cell>
-                          <Table.Cell
-                            className={cn('w-auto', task.isOverdue ? 'text-red-700' : '')}>{task.plot}</Table.Cell>
+                            className={cn('w-auto', task.is_overdue ? 'text-red-700' : '')}>{formatDate(task.task_date)}</Table.Cell>
                           <Table.Cell className='w-auto'>
                             <Chip className='text-white w-full flex justify-center items-center'
-                                  style={{backgroundColor: TASK_VARIANTS[task.actionTag].color}}>{task.actionTag}</Chip>
+                                  style={{backgroundColor: TASK_VARIANTS[task.task_tag].color}}>{TASK_VARIANTS[task.task_tag].label}</Chip>
                           </Table.Cell>
                           <Table.Cell className="w-full"/>
-                          <Table.Cell className="w-full">
-                            <ActionButtons/>
-                          </Table.Cell>
                         </Table.Row>
                       ))}
                     </Table.Body>
                   </Table.Content>
                 </Table.ScrollContainer>
               </Table>
-            </div>
-          )}
-          <p className="text-sm text-muted">
-            Выбрано:{" "}
-            <span className="font-medium">
-          {selectedKeys === "all"
-            ? "все"
-            : selectedKeys.size > 0
-              ? Array.from(selectedKeys).join(", ")
-              : "ничего"}
-        </span>
-          </p>
         </Tabs.Panel>
         <Tabs.Panel className="pt-4 w-full p-0 relative" id="harvest">
           <div className='absolute right-0 -top-12.5'>
-            <Button>
-              <LucidePlus className="w-5 h-5 m-0 p-0" strokeWidth={2}/>
-            </Button>
+            <AlertDialog>
+              <AlertDialog.Trigger>
+                <Button>
+                  <LucidePlus className="w-5 h-5 m-0 p-0" strokeWidth={2}/>
+                </Button>
+              </AlertDialog.Trigger>
+              <AlertDialog.Backdrop>
+                <AlertDialog.Container>
+                  <AlertDialog.Dialog className="sm:max-w-[400px]">
+                    <AlertDialog.CloseTrigger onClick={clearForm}/>
+                    <AlertDialog.Header>
+                      <AlertDialog.Heading>
+                        Внесение урожая
+                      </AlertDialog.Heading>
+                    </AlertDialog.Header>
+                    <AlertDialog.Body>
+                      <Form className="flex w-full flex-col gap-4 p-2">
+                        <TextField className="flex flex-col gap-1">
+                          <Label>Дата</Label>
+                          <Input
+                            type="date"
+                            value={harvestDate}
+                            onChange={(e) =>
+                              setHarvestDate(
+                                e.target.value
+                              )
+                            }
+                            className="h-10 border border-gray-300"
+                          />
+                        </TextField>
+
+                        <TextField className="flex flex-col gap-1">
+                          <Label>Значение</Label>
+                          <Input
+                            type="number"
+                            value={harvestValue}
+                            onChange={(e) =>
+                              setHarvestValue(
+                                e.target.value
+                              )
+                            }
+                            className="h-10 border border-gray-300"
+                          />
+                        </TextField>
+                      </Form>
+                    </AlertDialog.Body>
+                    <AlertDialog.Footer>
+                      <Button slot="close" onClick={clearForm}>
+                        Отмена
+                      </Button>
+                      <Button
+                        slot="close"
+                        onClick={handleCreateHarvest}
+                      >
+                        Создать
+                      </Button>
+                    </AlertDialog.Footer>
+                  </AlertDialog.Dialog>
+                </AlertDialog.Container>
+              </AlertDialog.Backdrop>
+            </AlertDialog>
           </div>
           <div className='flex w-full mb-5'>
             <Card className='w-full h-full flex justify-center items-center'>
               <BarChart
                 className='bg-white'
-                style={{width: '100%', maxWidth: '700px', maxHeight: '70vh', aspectRatio: 1.618}}
+                style={{width: '100%', maxWidth: '700px', maxHeight: '70vh', aspectRatio: 1.5}}
                 responsive
-                data={data}
+                data={chartData}
                 margin={{
                   top: 0,
                   right: 0,
@@ -278,7 +289,7 @@ export function PlantPage(props: Props) {
                 <XAxis dataKey="name"/>
                 <YAxis width="auto"/>
                 <Tooltip/>
-                <Bar dataKey="pv" fill="var(--color-primary)" activeBar={{fill: '#1d5100'}} radius={[40, 40, 0, 0]}/>
+                <Bar dataKey="kg" fill="var(--color-primary)" activeBar={{fill: '#1d5100'}} radius={[0, 0, 0, 0]}/>
               </BarChart>
             </Card>
           </div>
@@ -298,15 +309,54 @@ export function PlantPage(props: Props) {
                     <Table.Column className="w-auto"></Table.Column>
                   </Table.Header>
                   <Table.Body>
-                    {harvest.map((item) => (
-                      <Table.Row key={item.date} id={item.id}>
+                    {harvests.map((item) => (
+                      <Table.Row key={item.id} id={item.id}>
                         <Table.Cell
-                          className={cn('min-w-[100px] text-center')}>{item.date}</Table.Cell>
+                          className={cn('min-w-[140px] text-center')}>{formatDate(item.harvest_date)}</Table.Cell>
                         <Table.Cell
                           className={cn('min-w-[100px] text-center')}>{item.weight} кг</Table.Cell>
                         <Table.Cell className="w-full"/>
                         <Table.Cell className="w-auto">
-                          <ActionButtons/>
+                          <AlertDialog>
+                            <AlertDialog.Trigger>
+                              <button
+                                className="text-red-600 transition-all cursor-pointer duration-300 hover:opacity-60"
+                              >
+                                <LucideTrash2 />
+                              </button>
+                            </AlertDialog.Trigger>
+                            <AlertDialog.Backdrop>
+                              <AlertDialog.Container>
+                                <AlertDialog.Dialog className="sm:max-w-[350px]">
+                                  <AlertDialog.Header>
+                                    <AlertDialog.Heading>
+                                      Удаление сбора урожая
+                                    </AlertDialog.Heading>
+                                  </AlertDialog.Header>
+                                  <AlertDialog.Body>
+                                    Вы действительно хотите
+                                    удалить эту информацию о собранном урожае?
+                                  </AlertDialog.Body>
+                                  <AlertDialog.Footer>
+                                    <Button slot="close">
+                                      Отмена
+                                    </Button>
+                                    <Button
+                                      slot="close"
+                                      className="bg-red-600 hover:bg-red-700"
+                                      onClick={async () => {
+                                        await deleteHarvest(
+                                          item.id
+                                        )
+                                      }}
+                                    >
+                                      Удалить
+                                    </Button>
+                                  </AlertDialog.Footer>
+                                </AlertDialog.Dialog>
+                              </AlertDialog.Container>
+                            </AlertDialog.Backdrop>
+                          </AlertDialog>
                         </Table.Cell>
                       </Table.Row>
                     ))}
@@ -317,18 +367,96 @@ export function PlantPage(props: Props) {
         </Tabs.Panel>
         <Tabs.Panel className="pt-4 w-full p-0 relative" id="album">
           <div className='absolute right-0 -top-12.5'>
-            <Button>
+            <Button onClick={handleOpenFilePicker}>
               <LucidePlus className="w-5 h-5 m-0 p-0" strokeWidth={2}/>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleSelectImage}
+              />
             </Button>
           </div>
           <div className='grid grid-cols-3 gap-x-2 gap-y-2 w-fit mx-auto'>
-            {album.map((item) => (
-              <Card className='p-0 w-fit relative duration-300 hover:scale-102 cursor-pointer'>
-                <img src={item.photo} alt={item.description} className='w-80 h-80'/>
-                <div className='absolute right-2 top-2'>{item.tag}</div>
+            {currentPlant?.photos?.map((item:PlantPhoto) => (
+              <Card
+                className='p-0 relative duration-300 hover:scale-102 cursor-pointer rounded-xl shrink-0 w-80 h-80'
+                onClick={() => setOpenedPhoto(item)}
+              >
+                <img
+                  src={`http://localhost:8000${item.image_url}`}
+                  alt={item.image_url}
+                  className='w-full h-full object-cover'
+                />
+                <div className='absolute right-2 bottom-2 bg-white p-2 pb-0.5 rounded-lg'>
+                  <AlertDialog>
+                    <AlertDialog.Trigger>
+                      <button
+                        className="text-red-600 transition-all cursor-pointer duration-300 hover:opacity-60"
+                      >
+                        <LucideTrash2 />
+                      </button>
+                    </AlertDialog.Trigger>
+                    <AlertDialog.Backdrop>
+                      <AlertDialog.Container>
+                        <AlertDialog.Dialog className="sm:max-w-[350px]">
+                          <AlertDialog.Header>
+                            <AlertDialog.Heading>
+                              Удаление фото
+                            </AlertDialog.Heading>
+                          </AlertDialog.Header>
+                          <AlertDialog.Body>
+                            Вы действительно хотите удалить фото?
+                          </AlertDialog.Body>
+                          <AlertDialog.Footer>
+                            <Button slot="close">
+                              Отмена
+                            </Button>
+                            <Button
+                              slot="close"
+                              className="bg-red-600 hover:bg-red-700"
+                              onClick={async () => {
+                                await deletePlantPhoto(item.id)
+                                await getPlantsByPlotId(plotId!)
+                              }}
+                            >
+                              Удалить
+                            </Button>
+                          </AlertDialog.Footer>
+                        </AlertDialog.Dialog>
+                      </AlertDialog.Container>
+                    </AlertDialog.Backdrop>
+                  </AlertDialog>
+                </div>
               </Card>
             ))}
           </div>
+          <AlertDialog
+            isOpen={!!openedPhoto}
+            onOpenChange={(open) => {
+              if (!open) {
+                setOpenedPhoto(null)
+              }
+            }}
+          >
+            <AlertDialog.Backdrop>
+              <AlertDialog.Container>
+                <AlertDialog.Dialog className="p-0 w-[90vw] max-w-6xl">
+                  <AlertDialog.CloseTrigger/>
+                  <AlertDialog.Body>
+                    {openedPhoto && (
+                      <img
+                        src={`http://localhost:8000${openedPhoto.image_url}`}
+                        alt={openedPhoto.image_url}
+                        className='w-full max-h-[90vh] object-contain'
+                      />
+                    )}
+                  </AlertDialog.Body>
+                </AlertDialog.Dialog>
+              </AlertDialog.Container>
+            </AlertDialog.Backdrop>
+          </AlertDialog>
         </Tabs.Panel>
       </Tabs>
     </div>

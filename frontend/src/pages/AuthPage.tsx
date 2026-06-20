@@ -2,11 +2,15 @@ import {Card, Input, Label, Tabs, TextField, Form, ComboBox, ListBox, Button as 
 import icon from "/icon.svg";
 import {Button} from "@/components/ui/Button.tsx";
 import {EyeClosedIcon, EyeIcon, LucideArrowLeft, LucideArrowRight, LucideCheck, LucideLogIn} from "lucide-react";
-import {useRef, useState} from "react";
+import {type Key, useState} from "react";
+import {useNavigate} from "react-router-dom";
+import {useAuthStore} from "@/store/auth.store.ts";
+import {registerRequest} from "@/api/register.ts";
 
 interface Props {
 
 };
+
 
 export function AuthPage(props: Props) {
   const [passwordVisibility, setPasswordVisibility] = useState({
@@ -22,6 +26,71 @@ export function AuthPage(props: Props) {
     }))
   };
   const [step, setStep] = useState(0);
+
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+
+  const navigate = useNavigate()
+
+  const login = useAuthStore((state) => state.login)
+  const isLoading = useAuthStore((state) => state.isLoading)
+  const error = useAuthStore((state) => state.error)
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    const success = await login({
+      email,
+      password,
+    })
+
+    if (success) {
+      navigate("/plots")
+    }
+  }
+
+  const [loading, setLoading] = useState(false)
+  const [firstName, setFirstName] = useState("")
+  const [regEmail, setRegEmail] = useState("")
+  const [regPassword, setRegPassword] = useState("")
+  const [plotName, setPlotName] = useState("")
+  const [location, setLocation] = useState("");
+  const [imageFile, setImageFile] = useState<File | null>(null)
+  const handleRegister = async () => {
+    try {
+      setLoading(true)
+
+      const payload = {
+        user: {
+          email: regEmail,
+          password: regPassword,
+          first_name: firstName,
+        },
+        first_plot: {
+          name: plotName,
+          type: "greenhouse",
+          location: location,
+          image_url: imageFile ? "TODO_UPLOAD" : null,
+        },
+      }
+
+      const res = await registerRequest(payload)
+
+      useAuthStore.setState({
+        token: res.access_token,
+        user: res.user,
+        plots: res.plots ?? (res.first_plot ? [res.first_plot] : []),
+        selectedLocation:
+          res.plots?.[0]?.location ?? null,
+      })
+
+      navigate("/plots")
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <div className='w-full h-screen flex justify-center items-center overflow-hidden'>
@@ -51,17 +120,23 @@ export function AuthPage(props: Props) {
                 </Tabs.List>
               </Tabs.ListContainer>
               <Tabs.Panel className="w-full" id="auth">
-                <Form className="flex w-full flex-col gap-4">
+                <Form className="flex w-full flex-col gap-4" onSubmit={handleLogin}>
                   <TextField className="flex flex-col gap-1">
                     <Label htmlFor="input-type-email">Эл. почта</Label>
                     <Input id="input-type-email" placeholder="email@example.com" type="email"
-                           className='h-10 border border-gray-300'/>
+                           className='h-10 border border-gray-300'
+                           value={email}
+                           onChange={(e) => setEmail(e.target.value)}
+                    />
                   </TextField>
                   <TextField className="flex flex-col gap-1 relative">
                     <Label htmlFor="input-type-password">Пароль</Label>
                     <Input id="input-type-password" placeholder={passwordVisibility.auth ? "Пароль" : "••••••••"}
                            type={passwordVisibility.auth ? "text" : "password"}
-                           className='h-10 border border-gray-300'/>
+                           className='h-10 border border-gray-300'
+                           value={password}
+                           onChange={(e) => setPassword(e.target.value)}
+                    />
                     <button className='absolute top-9 right-4 cursor-pointer'
                             onClick={() => togglePasswordVisibility("auth")} type="button">
                       {passwordVisibility.auth ?
@@ -70,10 +145,14 @@ export function AuthPage(props: Props) {
                       }
                     </button>
                   </TextField>
-                  <span className="text-sm text-center text-muted duration-300 w-full cursor-pointer hover:text-black">Забыли пароль?</span>
-                  <Button className="w-full mb-3" type="submit">
+                  {error && (
+                    <span className="text-sm text-red-500">
+                      {error}
+                    </span>
+                  )}
+                  <Button className="w-full mb-3" type="submit" >
                     <LucideLogIn/>
-                    Войти
+                    {isLoading ? "Вход..." : "Войти"}
                   </Button>
                 </Form>
               </Tabs.Panel>
@@ -82,17 +161,23 @@ export function AuthPage(props: Props) {
                   <TextField className="flex flex-col gap-1">
                     <Label htmlFor="input-type-text">Как к вам обращаться?</Label>
                     <Input id="input-type-text" placeholder="Ваше имя" type="text"
+                           value={firstName}
+                           onChange={(e) => setFirstName(e.target.value)}
                            className='h-10 border border-gray-300'/>
                   </TextField>
                   <TextField className="flex flex-col gap-1">
                     <Label htmlFor="input-type-email">Эл. почта</Label>
                     <Input id="input-type-email" placeholder="email@example.com" type="email"
+                           value={regEmail}
+                           onChange={(e) => setRegEmail(e.target.value)}
                            className='h-10 border border-gray-300'/>
                   </TextField>
                   <TextField className="flex flex-col gap-1 relative">
                     <Label htmlFor="input-type-password">Пароль</Label>
                     <Input id="input-type-password" placeholder={passwordVisibility.first ? "Пароль" : "••••••••"}
                            type={passwordVisibility.first ? "text" : "password"}
+                           value={regPassword}
+                           onChange={(e) => setRegPassword(e.target.value)}
                            className='h-10 border border-gray-300'/>
                     <button className='absolute top-9 right-4 cursor-pointer'
                             onClick={() => togglePasswordVisibility("first")} type="button">
@@ -135,58 +220,22 @@ export function AuthPage(props: Props) {
                 <TextField className="flex flex-col gap-1">
                   <Label htmlFor="input-type-text">Название</Label>
                   <Input id="input-type-text" placeholder="Участок" type="text"
+                         value={plotName}
+                         onChange={(e) => setPlotName(e.target.value)}
                          className='h-10 border border-gray-300'/>
                 </TextField>
-                <ComboBox className="w-full">
-                  <Label>Населенный пункт</Label>
-                  <ComboBox.InputGroup>
-                    <Input placeholder="Казань" className='h-10 border border-gray-300'/>
-                    <ComboBox.Trigger/>
-                  </ComboBox.InputGroup>
-                  <ComboBox.Popover>
-                    <ListBox>
-                      <ListBox.Item id="aardvark" textValue="Aardvark">
-                        Aardvark
-                        <ListBox.ItemIndicator/>
-                      </ListBox.Item>
-                      <ListBox.Item id="cat" textValue="Cat">
-                        Cat
-                        <ListBox.ItemIndicator/>
-                      </ListBox.Item>
-                      <ListBox.Item id="dog" textValue="Dog">
-                        Dog
-                        <ListBox.ItemIndicator/>
-                      </ListBox.Item>
-                      <ListBox.Item id="kangaroo" textValue="Kangaroo">
-                        Kangaroo
-                        <ListBox.ItemIndicator/>
-                      </ListBox.Item>
-                      <ListBox.Item id="panda" textValue="Panda">
-                        Panda
-                        <ListBox.ItemIndicator/>
-                      </ListBox.Item>
-                      <ListBox.Item id="snake" textValue="Snake">
-                        Snake
-                        <ListBox.ItemIndicator/>
-                      </ListBox.Item>
-                    </ListBox>
-                  </ComboBox.Popover>
-                </ComboBox>
-                <div className='relative'>
-                  <Label htmlFor="add-plot-image">Изображение</Label>
-                  <Input
-                    className='w-full h-10 border border-gray-300'
-                    type='file'
-                    id='add-plot-image'
-                    accept="image/*"
-                    onChange={(e) => console.log(e.target.files[0])}
-                  />
-                </div>
+                <TextField className="flex flex-col gap-1">
+                  <Label htmlFor="input-type-text">Населенный пункт</Label>
+                  <Input id="input-type-text" placeholder="Агаповка" type="text"
+                         value={location}
+                         onChange={(e) => setLocation(e.target.value)}
+                         className='h-10 border border-gray-300'/>
+                </TextField>
                 <Button className="w-full" type="button" onClick={() => setStep(0)}>
                   <LucideArrowLeft/>
                   Назад
                 </Button>
-                <Button className="w-full mb-3" type="button">
+                <Button className="w-full mb-3" type="button" onClick={handleRegister}>
                   <LucideCheck/>
                   Завершить регистрацию
                 </Button>

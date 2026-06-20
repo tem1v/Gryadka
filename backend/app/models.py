@@ -16,7 +16,7 @@ class PlantStatus(str, enum.Enum):
     planted = "planted"
     fruiting = "fruiting"
     sick = "sick"
-    removed = "removed"
+    flowering = "flowering"
     harvested = "harvested"
 
 
@@ -55,7 +55,7 @@ class Plant(Base):
     name = Column(String, nullable=False)
     grade = Column(String, nullable=False)
     quantity = Column(Integer, nullable=False, default=1)
-    status = Column(Enum(PlantStatus), nullable=False, default=PlantStatus.planted)
+    status = Column(Enum(PlantStatus), nullable=False)
     season_archive_id = Column(String, ForeignKey("season_archives.id", ondelete="SET NULL"), nullable=True)
 
     total_yield_amount = Column(Float, nullable=True, default=0.0)
@@ -65,6 +65,7 @@ class Plant(Base):
     plot = relationship("GardenPlot", back_populates="plants")
     photos = relationship("PlantPhoto", back_populates="plant", cascade="all, delete-orphan")
     archive = relationship("SeasonArchive", back_populates="plants")
+    harvests = relationship("PlantHarvest", back_populates="plant", cascade="all, delete-orphan")
 
 
 class PlantPhoto(Base):
@@ -77,7 +78,6 @@ class PlantPhoto(Base):
     caption = Column(String, nullable=True)
     status = Column(String, nullable=True)
 
-    # Результаты ИИ-диагностики
     disease_detected = Column(String, nullable=True)
     confidence = Column(Float, nullable=True)
 
@@ -123,6 +123,7 @@ class TaskTag(str, enum.Enum):
     fertilizing = "fertilizing"
     harvest = "harvest"
     planting = "planting"
+    cleaning = "cleaning"
     other = "other"
 
 
@@ -164,4 +165,18 @@ class SeasonArchive(Base):
 
     plot = relationship("GardenPlot")
     plants = relationship("Plant", back_populates="archive")
+
+
+class PlantHarvest(Base):
+    __tablename__ = "plant_harvests"
+
+    id = Column(String, primary_key=True, index=True)
+    plant_id = Column(String, ForeignKey("plants.id", ondelete="CASCADE"), nullable=False)
+
+    weight = Column(Float, nullable=False)
+    harvest_date = Column(Date, nullable=False)
+
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    plant = relationship("Plant", back_populates="harvests")
 

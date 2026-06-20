@@ -1,16 +1,30 @@
-import {type PropsWithChildren, useState} from "react";
+import {type PropsWithChildren, useEffect, useState} from "react";
 import {Sidebar} from "./sidebar/Sidebar.tsx";
 import {PanelLeft} from "lucide-react";
 import {cn} from "@heroui/styles";
 import { Card } from "@heroui/react";
-import { Outlet } from "react-router-dom";
+import {Navigate, Outlet, useNavigate} from "react-router-dom";
+import { useAuthStore } from "@/store/auth.store"
 
 export function Layout({children}:PropsWithChildren) {
   const [isOpen, setIsOpen] = useState(true);
+  const token = useAuthStore((state) => state.token)
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!token) {
+      navigate('/sign-in', { replace: true });
+    }
+  }, [token, navigate]);
+
+  if (!token) {
+    return null;
+  }
+  const user = useAuthStore((state) => state.user)
+  const selectedLocation = useAuthStore((state) => state.selectedLocation)
   return <div className="h-screen flex w-full">
     <Sidebar
-    name={'Артём'}
-    location={'Казань'}
+    name={user?.first_name ?? ""}
+    location={selectedLocation ?? ""}
     isOpen={isOpen}
     onToggle={() => setIsOpen(!isOpen)}
   />
@@ -22,10 +36,7 @@ export function Layout({children}:PropsWithChildren) {
       </button>
     </Card>
     <main className='flex-1 p-2 overflow-y-auto pb-25'>
-      <Outlet>
-        {children}
-      </Outlet>
-
+      <Outlet/>
     </main>
   </div>
 }
